@@ -61,28 +61,58 @@ const socket = io();
 //   socket.off("off", listener);
 // }, 2000)
 
-const drag = ({ clientX, clientY }) => {
-  const position = {
-    top: clientY + "px",
-    left: clientX + "px"
-  };
+// const drag = ({ clientX, clientY }) => {
+//   const position = {
+//     top: clientY + "px",
+//     left: clientX + "px"
+//   };
 
-  drawCircle(position);
-  socket.emit("circle-position", position);
-};
+//   drawCircle(position);
+//   socket.emit("circle-position", position);
+// };
 
-const drawCircle =  ({top, left}) => {
-  circle.style.top = top;
-  circle.style.left = left;
-};
+// const drawCircle =  ({top, left}) => {
+//   circle.style.top = top;
+//   circle.style.left = left;
+// };
 
-const circle = document.getElementById("circle");
-document.addEventListener("mousedown", e => {
-  document.addEventListener("mousemove", drag);
+// const circle = document.getElementById("circle");
+// document.addEventListener("mousedown", e => {
+//   document.addEventListener("mousemove", drag);
+// });
+
+// document.addEventListener("mouseup", e => {
+//   document.removeEventListener("mousemove", drag);
+// });
+
+// socket.on("move-circle", drawCircle);
+
+const connectRoom1 = document.getElementById("connectToRoom1");
+const connectRoom2 = document.getElementById("connectToRoom2");
+const connectRoom3 = document.getElementById("connectToRoom3");
+
+connectRoom1.addEventListener("click", () => {
+  socket.emit("connect-to-room", "room1");
 });
 
-document.addEventListener("mouseup", e => {
-  document.removeEventListener("mousemove", drag);
+connectRoom2.addEventListener("click", () => {
+  socket.emit("connect-to-room", "room2");
 });
 
-socket.on("move-circle", drawCircle);
+connectRoom3.addEventListener("click", () => {
+  socket.emit("connect-to-room", "room3");
+});
+
+const sendMessage = document.getElementById("sendMessage");
+
+sendMessage.addEventListener("click", () => {
+  const message = prompt("Write your message:");
+  socket.emit("message", message);
+})
+
+socket.on("message-to-show", ({ message, room }) => {
+  const li = document.createElement("li");
+  li.textContent = message;
+  const ul = document.getElementById(room);
+  ul.appendChild(li);
+});
