@@ -37,17 +37,19 @@ io.on("connection", socket => {
   // on - listen the event everyTime it's emmited
   // once - listen the event once it's emmited
   // off - to turn off an event, we need to use a named arrow function
-  socket.on("last", message => {
-    const lastSocket = socketsConnected[socketsConnected.length -1];
-    io.to(lastSocket).emit("salute", message);
+  // socket.on("last", message => {
+  //   const lastSocket = socketsConnected[socketsConnected.length -1];
+  //   io.to(lastSocket).emit("salute", message);
+  // });
+
+  // socket.emit("off", "Connected");
+  // setTimeout(() => {
+  //   socket.emit("off", "Connected");
+  // }, 3000);
+
+  socket.on("circle-position", position => {
+    socket.broadcast.emit("move-circle", position);
   });
-
-  socket.emit("off", "Connected");
-  setTimeout(() => {
-    socket.emit("off", "Connected");
-  }, 3000);
-
-
 });
 
 httpServer.listen(3000);

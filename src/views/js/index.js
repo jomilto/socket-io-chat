@@ -26,37 +26,63 @@ const socket = io();
 //   console.log("Reconnected");
 // });
 
-socket.on("welcome", message => {
-  let textP = document.getElementById("text");
-  textP.textContent = message;
+// socket.on("welcome", message => {
+//   let textP = document.getElementById("text");
+//   textP.textContent = message;
+// });
+
+// let button = document.getElementById("emit-to-server");
+// button.addEventListener("click", () => {
+//   socket.emit("button", "hola desde el frontend");
+// });
+
+// socket.on("everyone", message => {
+//   let textP = document.getElementById("everyone");
+//   textP.textContent += message;
+// });
+
+// const emitToLast = document.getElementById("emit-to-last");
+// emitToLast.addEventListener("click", () => {
+//   socket.emit("last", "Hola");
+// });
+
+// socket.on("salute", message => {
+//   let textP = document.getElementById("salute");
+//   textP.textContent += message;
+// });
+
+// const listener = () => {
+//   console.log("Turning off the event");
+// }
+
+// socket.on("off", listener);
+
+// setTimeout(() => {
+//   socket.off("off", listener);
+// }, 2000)
+
+const drag = ({ clientX, clientY }) => {
+  const position = {
+    top: clientY + "px",
+    left: clientX + "px"
+  };
+
+  drawCircle(position);
+  socket.emit("circle-position", position);
+};
+
+const drawCircle =  ({top, left}) => {
+  circle.style.top = top;
+  circle.style.left = left;
+};
+
+const circle = document.getElementById("circle");
+document.addEventListener("mousedown", e => {
+  document.addEventListener("mousemove", drag);
 });
 
-let button = document.getElementById("emit-to-server");
-button.addEventListener("click", () => {
-  socket.emit("button", "hola desde el frontend");
+document.addEventListener("mouseup", e => {
+  document.removeEventListener("mousemove", drag);
 });
 
-socket.on("everyone", message => {
-  let textP = document.getElementById("everyone");
-  textP.textContent += message;
-});
-
-const emitToLast = document.getElementById("emit-to-last");
-emitToLast.addEventListener("click", () => {
-  socket.emit("last", "Hola");
-});
-
-socket.on("salute", message => {
-  let textP = document.getElementById("salute");
-  textP.textContent += message;
-});
-
-const listener = () => {
-  console.log("Turning off the event");
-}
-
-socket.on("off", listener);
-
-setTimeout(() => {
-  socket.off("off", listener);
-}, 2000)
+socket.on("move-circle", drawCircle);
