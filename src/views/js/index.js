@@ -1,4 +1,4 @@
-// const socket = io();
+const socket = io();
 
 // socket.on("connect", () => {
 //   console.log("Socket connected: ", socket.id);
@@ -117,43 +117,59 @@
 //   ul.appendChild(li);
 // });
 
-const user = prompt("Type your username:");
+// const user = prompt("Type your username:");
 
-const teachers = [
-  "teacher1",
-  "teacher2",
-  "teacher3",
-];
+// const teachers = [
+//   "teacher1",
+//   "teacher2",
+//   "teacher3",
+// ];
 
-let socketNamespace, group;
+// let socketNamespace, group;
 
-const chat = document.getElementById("chat");
-const namespace = document.getElementById("namespace");
+// const chat = document.getElementById("chat");
+// const namespace = document.getElementById("namespace");
 
-if (teachers.includes(user)) {
-  socketNamespace = io("/teachers");
-  group = "teachers";
-} 
-else {
-  socketNamespace = io("/students");
-  group = "students";
-}
+// if (teachers.includes(user)) {
+//   socketNamespace = io("/teachers");
+//   group = "teachers";
+// } 
+// else {
+//   socketNamespace = io("/students");
+//   group = "students";
+// }
 
-socketNamespace.on("connect", () => {
-  namespace.textContent = group;
+// socketNamespace.on("connect", () => {
+//   namespace.textContent = group;
+// });
+
+// const button = document.getElementById("sendMessage");
+// button.addEventListener("click", () => {
+//   const message = prompt("Type your message:");
+//   socketNamespace.emit("send-message", {
+//     message,
+//     user
+//   });
+// });
+
+// socketNamespace.on("message", ({ user, message}) => {
+//  const li = document.createElement("li");
+//  li.textContent = `${user}: ${message}`;
+//  chat.appendChild(li);
+// });
+
+const send = document.getElementById("send");
+const disconnect = document.getElementById("disconnect");
+const connect = document.getElementById("connect");
+
+send.addEventListener("click", () => {
+  socket.volatile.emit("is-connected", "Connected");
 });
 
-const button = document.getElementById("sendMessage");
-button.addEventListener("click", () => {
-  const message = prompt("Type your message:");
-  socketNamespace.emit("send-message", {
-    message,
-    user
-  });
+disconnect.addEventListener("click", () => {
+  socket.disconnect();
 });
 
-socketNamespace.on("message", ({ user, message}) => {
- const li = document.createElement("li");
- li.textContent = `${user}: ${message}`;
- chat.appendChild(li);
+connect.addEventListener("click", () => {
+  socket.connect();
 });
