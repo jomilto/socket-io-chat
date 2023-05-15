@@ -1,4 +1,4 @@
-const socket = io();
+// const socket = io();
 
 // socket.on("connect", () => {
 //   console.log("Socket connected: ", socket.id);
@@ -87,32 +87,73 @@ const socket = io();
 
 // socket.on("move-circle", drawCircle);
 
-const connectRoom1 = document.getElementById("connectToRoom1");
-const connectRoom2 = document.getElementById("connectToRoom2");
-const connectRoom3 = document.getElementById("connectToRoom3");
+// const connectRoom1 = document.getElementById("connectToRoom1");
+// const connectRoom2 = document.getElementById("connectToRoom2");
+// const connectRoom3 = document.getElementById("connectToRoom3");
 
-connectRoom1.addEventListener("click", () => {
-  socket.emit("connect-to-room", "room1");
+// connectRoom1.addEventListener("click", () => {
+//   socket.emit("connect-to-room", "room1");
+// });
+
+// connectRoom2.addEventListener("click", () => {
+//   socket.emit("connect-to-room", "room2");
+// });
+
+// connectRoom3.addEventListener("click", () => {
+//   socket.emit("connect-to-room", "room3");
+// });
+
+// const sendMessage = document.getElementById("sendMessage");
+
+// sendMessage.addEventListener("click", () => {
+//   const message = prompt("Write your message:");
+//   socket.emit("message", message);
+// })
+
+// socket.on("message-to-show", ({ message, room }) => {
+//   const li = document.createElement("li");
+//   li.textContent = message;
+//   const ul = document.getElementById(room);
+//   ul.appendChild(li);
+// });
+
+const user = prompt("Type your username:");
+
+const teachers = [
+  "teacher1",
+  "teacher2",
+  "teacher3",
+];
+
+let socketNamespace, group;
+
+const chat = document.getElementById("chat");
+const namespace = document.getElementById("namespace");
+
+if (teachers.includes(user)) {
+  socketNamespace = io("/teachers");
+  group = "teachers";
+} 
+else {
+  socketNamespace = io("/students");
+  group = "students";
+}
+
+socketNamespace.on("connect", () => {
+  namespace.textContent = group;
 });
 
-connectRoom2.addEventListener("click", () => {
-  socket.emit("connect-to-room", "room2");
+const button = document.getElementById("sendMessage");
+button.addEventListener("click", () => {
+  const message = prompt("Type your message:");
+  socketNamespace.emit("send-message", {
+    message,
+    user
+  });
 });
 
-connectRoom3.addEventListener("click", () => {
-  socket.emit("connect-to-room", "room3");
-});
-
-const sendMessage = document.getElementById("sendMessage");
-
-sendMessage.addEventListener("click", () => {
-  const message = prompt("Write your message:");
-  socket.emit("message", message);
-})
-
-socket.on("message-to-show", ({ message, room }) => {
-  const li = document.createElement("li");
-  li.textContent = message;
-  const ul = document.getElementById(room);
-  ul.appendChild(li);
+socketNamespace.on("message", ({ user, message}) => {
+ const li = document.createElement("li");
+ li.textContent = `${user}: ${message}`;
+ chat.appendChild(li);
 });
