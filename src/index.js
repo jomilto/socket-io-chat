@@ -18,6 +18,20 @@ app.get("/", (req, res) => {
 
 const socketsConnected = [];
 
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (token === "TokenGenial") {
+    next();
+  }
+  else {
+    const err = new Error("Token invalid.");
+    err.data = {
+      details: "You can't be authenticated."
+    };
+    next(err);
+  }
+});
+
 io.on("connection", socket => {
   // socket.connectedRoom = "";
   // socketsConnected.push(socket.id);
@@ -80,7 +94,8 @@ io.on("connection", socket => {
   //   });
   // });
 
-  socket.on("is-connected", console.log);
+  // socket.on("is-connected", console.log);
+  console.log(socket.id);
 });
 
 // const teachers = io.of("teachers");

@@ -1,4 +1,8 @@
-const socket = io();
+const socket = io({
+  auth: {
+    token: "TokenGenial"
+  }
+});
 
 // socket.on("connect", () => {
 //   console.log("Socket connected: ", socket.id);
@@ -158,18 +162,22 @@ const socket = io();
 //  chat.appendChild(li);
 // });
 
-const send = document.getElementById("send");
-const disconnect = document.getElementById("disconnect");
-const connect = document.getElementById("connect");
+// const send = document.getElementById("send");
+// const disconnect = document.getElementById("disconnect");
+// const connect = document.getElementById("connect");
 
-send.addEventListener("click", () => {
-  socket.volatile.emit("is-connected", "Connected");
-});
+// send.addEventListener("click", () => {
+//   socket.volatile.emit("is-connected", "Connected");
+// });
 
-disconnect.addEventListener("click", () => {
-  socket.disconnect();
-});
+// disconnect.addEventListener("click", () => {
+//   socket.disconnect();
+// });
 
-connect.addEventListener("click", () => {
-  socket.connect();
-});
+// connect.addEventListener("click", () => {
+//   socket.connect();
+// });
+
+socket.on("connect_error", (err) => {
+
+})
